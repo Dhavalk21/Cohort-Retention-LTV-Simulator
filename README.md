@@ -34,6 +34,3 @@ This simulator computes user lifecycle value and growth using industry-standard 
 * **Client-Side Calculations:** Run completely on highly responsive, vanilla JavaScript with zero tracking cookies or database dependencies.
 * **Tailwind CSS Styling:** Crafted using a clean, accessible layout designed for high-resolution widescreen monitors and mobile screens alike.
 * **Interactive Tooltips:** Friendly, built-in documentation overlays next to every metric, helping stakeholders understand complex product operations terms on hover.
-
----
-&copy; 2026 Dhaval Kareliya. All rights reserved.
