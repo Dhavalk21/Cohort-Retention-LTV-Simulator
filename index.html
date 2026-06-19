@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cohort Retention & LTV Compound Simulator | Designed by Dhaval Kareliya</title>
+  <!-- Tailwind CSS for high-quality, modern styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Smooth custom transitions and scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Main Navigation / Top Header -->
+  <header class="bg-white border-b border-slate-200 py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6 w-full">
+      
+      <!-- Left Column: Branding, Title, Description -->
+      <div class="flex flex-col gap-2 max-w-3xl">
+        <!-- Co-branded Personal Pill Badges (Growth & Analytics is now first) -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-600 border border-slate-200">
+            Growth & Analytics • Product Management Tool
+          </span>
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 whitespace-nowrap">
+            <span>Designed by Dhaval Kareliya</span>
+            <span class="text-indigo-200 font-normal">|</span>
+            
+            <!-- LinkedIn Link with Icon -->
+            <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" class="hover:text-indigo-900 hover:underline inline-flex items-center gap-1 transition">
+              <svg class="w-3.5 h-3.5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </a>
+            
+            <span class="text-indigo-200 font-normal">|</span>
+            
+            <!-- GitHub Link with Icon -->
+            <a href="https://github.com/Dhavalk21" target="_blank" class="hover:text-indigo-900 hover:underline inline-flex items-center gap-1 transition">
+              <svg class="w-3.5 h-3.5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </span>
+        </div>
+        
+        <!-- Main Title -->
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight mt-1">
+          Interactive Cohort Retention & LTV Simulator
+        </h1>
+        
+        <!-- Description -->
+        <p class="text-sm text-slate-500 leading-relaxed">
+          Simulate how minor improvements in product onboarding, value delivery, and user habit formation compound to lift Customer Lifetime Value (LTV) and scale recurring profitability.
+        </p>
+      </div>
+      
+      <!-- Right Column: Preset Buttons -->
+      <div class="flex items-center gap-3 flex-shrink-0 self-start md:self-center">
+        <button id="btnLoadSaaS" class="inline-flex items-center justify-center px-4 h-11 border border-slate-300 text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition whitespace-nowrap">
+          Load SaaS Preset
+        </button>
+        <button id="btnLoadB2C" class="inline-flex items-center justify-center px-4 h-11 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition whitespace-nowrap">
+          Load Consumer App Preset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Workspace Grid -->
+  <main class="flex-grow max-w-[1600px] w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-8">
+    
+    <!-- Left Configuration Panel (Sized exactly to 38.3% Width) -->
+    <div class="w-full lg:w-[38.3%] flex flex-col gap-6 flex-shrink-0">
+      
+      <!-- Section 1: Cohort Volume & Unit Economics -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          1. Cohort Unit Economics
+        </h2>
+        
+        <div class="space-y-4">
+          <!-- Monthly Cohort Signups -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-slate-500">
+                Monthly New Signups
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Monthly New Signups:</strong> The baseline count of new customers or users registered each month to initiate our compound cohort models.
+                  </div>
+                </div>
+              </span>
+              <span id="labelCohortSize" class="text-slate-400">Monthly signups</span>
+            </div>
+            <input type="number" id="cohortSize" step="500" min="10" value="10000" class="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <!-- Average Monthly ARPU -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-slate-500">
+                Avg. Monthly ARPU (€)
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Average Revenue Per User (ARPU):</strong> The average amount of money generated per month per active customer subscription.
+                  </div>
+                </div>
+              </span>
+              <span id="valArpu" class="font-bold text-indigo-600">€15.00</span>
+            </div>
+            <input type="range" id="arpu" min="1" max="500" step="1" value="15" class="w-full h-2 rounded-lg bg-slate-200 accent-indigo-600 cursor-pointer">
+          </div>
+
+          <!-- Customer Acquisition Cost (CAC) -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-slate-500">
+                Avg. CAC (€)
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Customer Acquisition Cost (CAC):</strong> The total marketing and sales expenses spent to acquire a single customer. Used to evaluate your LTV:CAC health score.
+                  </div>
+                </div>
+              </span>
+              <span id="valCac" class="font-bold text-indigo-600">€45.00</span>
+            </div>
+            <input type="range" id="cac" min="5" max="1500" step="5" value="45" class="w-full h-2 rounded-lg bg-slate-200 accent-indigo-600 cursor-pointer">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Baseline Cohort Curve Map -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            2. Baseline Retention Curve
+          </span>
+          <span class="text-xs font-semibold text-slate-400">Month-to-Month</span>
+        </h2>
+        
+        <div class="space-y-4">
+          <!-- Month 1 Baseline -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Month-1 Baseline
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Month-1 Retention:</strong> Users retained after Month 1. This represents onboarding success and immediate product value discovery.
+                  </div>
+                </div>
+              </span>
+              <input type="number" id="baseM1" min="0" max="100" value="40" class="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div class="flex flex-col">
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Month-3 Baseline
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Month-3 Retention:</strong> Mid-term habit formation metric. High-churn products collapse fast between months 1 and 3.
+                  </div>
+                </div>
+              </span>
+              <input type="number" id="baseM3" min="0" max="100" value="25" class="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <!-- Month 6 & Month 12 Baseline -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Month-6 Baseline
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Month-6 Retention:</strong> Long-term active status check.
+                  </div>
+                </div>
+              </span>
+              <input type="number" id="baseM6" min="0" max="100" value="18" class="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div class="flex flex-col">
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Month-12 Baseline
+                <div class="relative inline-block group">
+                  <span class="text-indigo-600 cursor-help font-bold text-[11px] bg-indigo-50 hover:bg-indigo-100 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-200">?</span>
+                  <div class="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Month-12 Retention:</strong> Your core retention floor. The percentage of users retained after one year.
+                  </div>
+                </div>
+              </span>
+              <input type="number" id="baseM12" min="0" max="100" value="10" class="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Retention Boost Optimizer -->
+      <div class="bg-indigo-950 text-indigo-100 p-6 rounded-xl border border-indigo-900 shadow-md">
+        <h2 class="text-base font-bold text-white mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          3. Optimization Boost Simulator
+        </h2>
+        <p class="text-xs text-indigo-200 mb-4 leading-relaxed">Simulate a product optimization campaign (e.g. improved onboarding UX, proactive support, or habit loop rewards) and measure its impact on subsequent months.</p>
+        
+        <div class="space-y-4">
+          <!-- Month 1 Uplift -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="flex items-center gap-1.5 text-indigo-200">
+                Month-1 Improvement Lift
+                <div class="relative inline-block group">
+                  <span class="text-indigo-400 cursor-help font-bold text-[11px] bg-indigo-900 hover:bg-indigo-800 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-800">?</span>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Onboarding Optimization Lift:</strong> The expected absolute increase in Month-1 retention resulting from a new customer activation flow.
+                  </div>
+                </div>
+              </span>
+              <span id="valLiftM1" class="font-bold text-white">+10%</span>
+            </div>
+            <input type="range" id="liftM1" min="0" max="30" step="1" value="10" class="w-full h-2 rounded-lg bg-indigo-900 accent-indigo-400 cursor-pointer">
+          </div>
+
+          <!-- Long-term Retention Floor Preservation -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="flex items-center gap-1.5 text-indigo-200">
+                Retention Retention Carry-Over (%)
+                <div class="relative inline-block group">
+                  <span class="text-indigo-400 cursor-help font-bold text-[11px] bg-indigo-900 hover:bg-indigo-800 w-4 h-4 rounded-full flex items-center justify-center transition border border-indigo-800">?</span>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block w-64 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl z-50 pointer-events-none normal-case font-normal leading-relaxed">
+                    <strong>Carry-Over Ratio:</strong> How much of your early-stage activation win carries over to later months. A 100% ratio means the Month-1 gain shifts your entire 12-month retention curve upward.
+                  </div>
+                </div>
+              </span>
+              <span id="valCarryOver" class="font-bold text-white">80%</span>
+            </div>
+            <input type="range" id="carryOver" min="10" max="100" step="5" value="80" class="w-full h-2 rounded-lg bg-indigo-900 accent-indigo-400 cursor-pointer">
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Right Panel: Visualizations & Analytics Workspace (Sized exactly to 61.7% Width) -->
+    <div class="w-full lg:w-[61.7%] flex flex-col gap-6 flex-grow">
+      
+      <!-- Financial Metric Highlights Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Baseline Customer Lifetime Value -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Baseline LTV</span>
+          <span id="statBaseLtv" class="block text-3xl font-extrabold text-slate-900 mt-1">€--</span>
+          <div class="mt-2 text-xs flex justify-between text-slate-500">
+            <span>Ratio to CAC:</span>
+            <span id="statBaseRatio" class="font-bold">--</span>
+          </div>
+        </div>
+
+        <!-- Optimized Customer Lifetime Value -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="absolute right-0 top-0 h-2 bg-emerald-500 w-full"></div>
+          <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Optimized LTV</span>
+          <span id="statOptLtv" class="block text-3xl font-extrabold text-emerald-600 mt-1">€--</span>
+          <div class="mt-2 text-xs flex justify-between text-slate-500">
+            <span>Ratio to CAC:</span>
+            <span id="statOptRatio" class="font-bold text-emerald-600">--</span>
+          </div>
+        </div>
+
+        <!-- Incremental Monthly Profit Expansion -->
+        <div class="bg-slate-900 text-white p-5 rounded-xl shadow-md flex flex-col justify-between">
+          <div>
+            <span class="block text-[10px] font-bold uppercase tracking-widest text-indigo-300">Net Enterprise Value Delta</span>
+            <span id="statAnnualProfitDelta" class="block text-2xl font-extrabold text-white mt-1">€0 / Year</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-2 leading-relaxed">
+            Projected revenue lift from scaling signups using optimized LTV dynamics.
+          </p>
+        </div>
+      </div>
+
+      <!-- Live-Generated Interactive SVG Line Chart -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center justify-between">
+          <span>12-Month Cohort Retention Curves</span>
+          <span class="text-xs font-normal text-slate-400 flex items-center gap-4">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t-2 border-slate-400 inline-block"></span> Baseline</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t-2 border-indigo-600 inline-block"></span> Optimized</span>
+          </span>
+        </h3>
+        
+        <div class="relative w-full h-[220px] bg-slate-50 rounded-lg p-2 border border-slate-100">
+          <svg id="retentionChart" viewBox="0 0 500 200" class="w-full h-full overflow-visible">
+            <!-- Grid Lines and Y-Axis Marks -->
+            <line x1="40" y1="20" x2="480" y2="20" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="40" y1="60" x2="480" y2="60" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="40" y1="100" x2="480" y2="100" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="40" y1="140" x2="480" y2="140" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="40" y1="180" x2="480" y2="180" stroke="#e2e8f0" stroke-width="1.5" />
+            
+            <text x="30" y="24" font-size="8" fill="#94a3b8" text-anchor="end">100%</text>
+            <text x="30" y="64" font-size="8" fill="#94a3b8" text-anchor="end">75%</text>
+            <text x="30" y="104" font-size="8" fill="#94a3b8" text-anchor="end">50%</text>
+            <text x="30" y="144" font-size="8" fill="#94a3b8" text-anchor="end">25%</text>
+            <text x="30" y="184" font-size="8" fill="#94a3b8" text-anchor="end">0%</text>
+
+            <!-- X-Axis Labels (Months) -->
+            <text x="40" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M0</text>
+            <text x="80" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M1</text>
+            <text x="120" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M2</text>
+            <text x="160" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M3</text>
+            <text x="200" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M4</text>
+            <text x="240" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M5</text>
+            <text x="280" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M6</text>
+            <text x="320" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M7</text>
+            <text x="360" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M8</text>
+            <text x="400" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M9</text>
+            <text x="440" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M10</text>
+            <text x="480" y="195" font-size="8" fill="#94a3b8" text-anchor="middle">M12</text>
+
+            <!-- Dynamic Paths loaded programmatically -->
+            <path id="pathBaseline" d="" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,3" />
+            <path id="pathOptimized" d="" fill="none" stroke="#4f46e5" stroke-width="3" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Cohort Value Matrix (Monthly Heatmap Grid) -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col w-full">
+        <div class="p-5 border-b border-slate-200">
+          <h3 class="text-base font-bold text-slate-900">12-Month Segmented Decay Matrix</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Displays expected cohort retention decay patterns. Darker shades indicate higher long-term preservation.</p>
+        </div>
+        
+        <div class="overflow-x-auto w-full">
+          <table class="w-full text-left border-collapse table-auto text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold text-[10px]">
+                <th class="py-3 px-4">Segment Scenario</th>
+                <th class="py-3 px-2 text-center">M0</th>
+                <th class="py-3 px-2 text-center">M1</th>
+                <th class="py-3 px-2 text-center">M2</th>
+                <th class="py-3 px-2 text-center">M3</th>
+                <th class="py-3 px-2 text-center">M4</th>
+                <th class="py-3 px-2 text-center">M5</th>
+                <th class="py-3 px-2 text-center">M6</th>
+                <th class="py-3 px-2 text-center">M8</th>
+                <th class="py-3 px-2 text-center">M10</th>
+                <th class="py-3 px-2 text-center">M12</th>
+                <th class="py-3 px-4 text-right">Model LTV</th>
+              </tr>
+            </thead>
+            <tbody id="retentionTableBody" class="divide-y divide-slate-100 font-mono">
+              <!-- Rendered programmatically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Executive Memo Output Dashboard -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Enterprise Investment Executive Brief</h3>
+            <p class="text-xs text-slate-500 mt-0.5">An instantly copyable brief of unit economics suitable for presentation to the Chief Financial Officer.</p>
+          </div>
+          <button id="btnCopyMemo" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3.5 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            Copy Memo (Markdown)
+          </button>
+        </div>
+        
+        <div class="p-6 bg-slate-50">
+          <div id="memoContent" class="bg-white p-6 rounded-lg border border-slate-200 shadow-inner font-mono text-xs text-slate-700 whitespace-pre-wrap leading-relaxed max-h-[300px] overflow-y-auto">
+            <!-- Memo renders dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Professional Portfolio Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-6 px-4">
+    <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div>
+        <p>&copy; 2026 Dhaval Kareliya. All rights reserved.</p>
+      </div>
+      <div class="flex items-center gap-6 font-semibold">
+        <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" class="text-slate-600 hover:text-indigo-600 transition">LinkedIn</a>
+        <a href="https://github.com/Dhavalk21" target="_blank" class="text-slate-600 hover:text-indigo-600 transition">GitHub Portfolio</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Dashboard Business Logic -->
+  <script>
+    // State management representing active inputs
+    let model = {
+      cohortSize: 10000,
+      arpu: 15,
+      cac: 45,
+      baseM1: 40,
+      baseM3: 25,
+      baseM6: 18,
+      baseM12: 10,
+      liftM1: 10,
+      carryOver: 80
+    };
+
+    // Standard business presets
+    const saasPreset = {
+      cohortSize: 1500,
+      arpu: 120,
+      cac: 480,
+      baseM1: 85,
+      baseM3: 75,
+      baseM6: 65,
+      baseM12: 55,
+      liftM1: 8,
+      carryOver: 90
+    };
+
+    const consumerPreset = {
+      cohortSize: 25000,
+      arpu: 6,
+      cac: 12,
+      baseM1: 30,
+      baseM3: 15,
+      baseM6: 10,
+      baseM12: 5,
+      liftM1: 12,
+      carryOver: 70
+    };
+
+    // DOM Elements
+    const inputCohortSize = document.getElementById('cohortSize');
+    const inputArpu = document.getElementById('arpu');
+    const valArpu = document.getElementById('valArpu');
+    const inputCac = document.getElementById('cac');
+    const valCac = document.getElementById('valCac');
+
+    const inputBaseM1 = document.getElementById('baseM1');
+    const inputBaseM3 = document.getElementById('baseM3');
+    const inputBaseM6 = document.getElementById('baseM6');
+    const inputBaseM12 = document.getElementById('baseM12');
+
+    const inputLiftM1 = document.getElementById('liftM1');
+    const valLiftM1 = document.getElementById('valLiftM1');
+    const inputCarryOver = document.getElementById('carryOver');
+    const valCarryOver = document.getElementById('valCarryOver');
+
+    // Stat Displays
+    const statBaseLtv = document.getElementById('statBaseLtv');
+    const statBaseRatio = document.getElementById('statBaseRatio');
+    const statOptLtv = document.getElementById('statOptLtv');
+    const statOptRatio = document.getElementById('statOptRatio');
+    const statAnnualProfitDelta = document.getElementById('statAnnualProfitDelta');
+
+    const chartBaselinePath = document.getElementById('pathBaseline');
+    const chartOptimizedPath = document.getElementById('pathOptimized');
+    const retentionTableBody = document.getElementById('retentionTableBody');
+    const memoContent = document.getElementById('memoContent');
+
+    // Setup Presets
+    document.getElementById('btnLoadSaaS').addEventListener('click', () => {
+      model = { ...saasPreset };
+      applyModelToInputs();
+      calculate();
+    });
+
+    document.getElementById('btnLoadB2C').addEventListener('click', () => {
+      model = { ...consumerPreset };
+      applyModelToInputs();
+      calculate();
+    });
+
+    // Generate smooth continuous logarithmic/power curve based on strategic PM milestone anchors
+    function generateCurve(m1, m3, m6, m12) {
+      const curve = [100.0]; // Month 0 is always 100% active
+      
+      // Interpolate curves using standard business decay ratios
+      // We map milestones to index positions
+      const baselineAnchors = { 1: m1, 3: m3, 6: m6, 12: m12 };
+
+      for (let i = 1; i <= 12; i++) {
+        if (baselineAnchors[i] !== undefined) {
+          curve.push(baselineAnchors[i]);
+        } else {
+          // Linear/log interpolation helper
+          if (i === 2) {
+            curve.push(m1 - (m1 - m3) * 0.6);
+          } else if (i === 4) {
+            curve.push(m3 - (m3 - m6) * 0.35);
+          } else if (i === 5) {
+            curve.push(m3 - (m3 - m6) * 0.7);
+          } else if (i > 6 && i < 12) {
+            const step = (i - 6) / 6.0;
+            curve.push(m6 - (m6 - m12) * step);
+          }
+        }
+      }
+      return curve.map(v => Math.max(0, Math.min(100, Math.round(v * 100) / 100)));
+    }
+
+    // Mathematical calculations
+    function calculate() {
+      // 1. Build curves
+      const baseCurve = generateCurve(model.baseM1, model.baseM3, model.baseM6, model.baseM12);
+      
+      // Optimized curve calculated by applying the onboarding lift carried down stream
+      const optM1 = Math.min(100, model.baseM1 + model.liftM1);
+      const shiftRatio = model.carryOver / 100.0;
+      
+      const optM3 = Math.min(100, model.baseM3 + (model.liftM1 * shiftRatio));
+      const optM6 = Math.min(100, model.baseM6 + (model.liftM1 * shiftRatio * 0.9));
+      const optM12 = Math.min(100, model.baseM12 + (model.liftM1 * shiftRatio * 0.8));
+
+      const optCurve = generateCurve(optM1, optM3, optM6, optM12);
+
+      // 2. Calculate LTV over 12 months (standard product lifecycle window)
+      // LTV = Sum of retention rate * monthly ARPU
+      let baseLtvVal = 0.0;
+      let optLtvVal = 0.0;
+
+      for (let i = 0; i <= 12; i++) {
+        baseLtvVal += (baseCurve[i] / 100.0) * model.arpu;
+        optLtvVal += (optCurve[i] / 100.0) * model.arpu;
+      }
+
+      // Update basic economics outputs
+      statBaseLtv.textContent = `€${baseLtvVal.toFixed(2)}`;
+      statOptLtv.textContent = `€${optLtvVal.toFixed(2)}`;
+
+      const baseRatio = baseLtvVal / model.cac;
+      const optRatio = optLtvVal / model.cac;
+
+      // Color code health indicator metrics
+      statBaseRatio.textContent = `${baseRatio.toFixed(1)}x LTV:CAC`;
+      statBaseRatio.className = `font-bold ${baseRatio >= 3 ? 'text-emerald-600' : 'text-amber-600'}`;
+
+      statOptRatio.textContent = `${optRatio.toFixed(1)}x LTV:CAC`;
+      statOptRatio.className = `font-bold ${optRatio >= 3 ? 'text-emerald-600' : 'text-indigo-600'}`;
+
+      // Net Enterprise Value Delta calculation
+      // Annual revenue delta = monthly cohort signups * 12 months * LTV difference
+      const monthlyRevDelta = model.cohortSize * (optLtvVal - baseLtvVal);
+      const annualRevDelta = monthlyRevDelta * 12;
+      statAnnualProfitDelta.textContent = `+€${Math.round(annualRevDelta).toLocaleString()} / Yr`;
+
+      // 3. Render SVG Chart paths dynamically
+      // Grid dimensions are 500x200. X ranges 40 to 480 (width 440), Y ranges 180 to 20 (height 160)
+      const pointsBase = baseCurve.map((val, idx) => {
+        const x = 40 + (idx * 40); // 11 steps for 12 months
+        const y = 180 - (val / 100.0 * 160);
+        return `${x},${y}`;
+      });
+
+      const pointsOpt = optCurve.map((val, idx) => {
+        const x = 40 + (idx * 40);
+        const y = 180 - (val / 100.0 * 160);
+        return `${x},${y}`;
+      });
+
+      chartBaselinePath.setAttribute('d', `M ${pointsBase.join(' L ')}`);
+      chartOptimizedPath.setAttribute('d', `M ${pointsOpt.join(' L ')}`);
+
+      // 4. Render Grid Heatmap Table
+      renderTable(baseCurve, optCurve);
+
+      // 5. Update Executive Memo
+      updateMemo(baseLtvVal, optLtvVal, baseRatio, optRatio, annualRevDelta);
+    }
+
+    // Helper to generate dynamic colored matrix cell styling based on density
+    function getHeatmapBg(val) {
+      if (val >= 80) return 'bg-indigo-100 text-indigo-900 font-bold';
+      if (val >= 50) return 'bg-indigo-50 text-indigo-800';
+      if (val >= 25) return 'bg-slate-100 text-slate-700';
+      if (val >= 10) return 'bg-amber-50 text-amber-800';
+      return 'bg-red-50 text-red-800';
+    }
+
+    function renderTable(base, opt) {
+      retentionTableBody.innerHTML = '';
+
+      // Baseline Row
+      const rowBase = document.createElement('tr');
+      rowBase.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+      rowBase.innerHTML = `
+        <td class="py-3 px-4 font-semibold text-slate-500 text-left">Baseline Cohort</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[0])}">${base[0].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[1])}">${base[1].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[2])}">${base[2].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[3])}">${base[3].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[4])}">${base[4].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[5])}">${base[5].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[6])}">${base[6].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[8])}">${base[8].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[10])}">${base[10].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(base[12])}">${base[12].toFixed(0)}%</td>
+        <td class="py-3 px-4 text-right font-bold text-slate-900">€${(base.reduce((sum, v) => sum + (v/100*model.arpu), 0)).toFixed(1)}</td>
+      `;
+      retentionTableBody.appendChild(rowBase);
+
+      // Optimized Row
+      const rowOpt = document.createElement('tr');
+      rowOpt.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+      rowOpt.innerHTML = `
+        <td class="py-3 px-4 font-semibold text-indigo-700 text-left">Optimized Scenario</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[0])}">${opt[0].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[1])}">${opt[1].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[2])}">${opt[2].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[3])}">${opt[3].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[4])}">${opt[4].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[5])}">${opt[5].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[6])}">${opt[6].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[8])}">${opt[8].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[10])}">${opt[10].toFixed(0)}%</td>
+        <td class="py-3 px-2 text-center ${getHeatmapBg(opt[12])}">${opt[12].toFixed(0)}%</td>
+        <td class="py-3 px-4 text-right font-bold text-indigo-600">€${(opt.reduce((sum, v) => sum + (v/100*model.arpu), 0)).toFixed(1)}</td>
+      `;
+      retentionTableBody.appendChild(rowOpt);
+    }
+
+    // Auto-drafting Executive Brief memo
+    function updateMemo(baseLtv, optLtv, baseRatio, optRatio, annualRev) {
+      let text = `### 💼 COHORT RETENTION & LTV STRATEGY BRIEF\n`;
+      text += `Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}\n`;
+      text += `Author: Growth Product Management\n`;
+      text += `=========================================================================\n\n`;
+
+      text += `1. VALUE METRIC COMPARISON (12-MONTH HORIZON)\n`;
+      text += `-------------------------------------------------------------------------\n`;
+      text += `* Monthly Sign-up Scale     : ${model.cohortSize.toLocaleString()} registrations / month\n`;
+      text += `* Average Monthly ARPU      : €${model.arpu.toFixed(2)}\n`;
+      text += `* Baseline CAC Allocation   : €${model.cac.toFixed(2)}\n\n`;
+      
+      text += `* Baseline Customer LTV     : €${baseLtv.toFixed(2)} (LTV:CAC Health: ${baseRatio.toFixed(1)}x)\n`;
+      text += `* Optimized Customer LTV    : €${optLtv.toFixed(2)} (LTV:CAC Health: ${optRatio.toFixed(1)}x)\n`;
+      text += `* Unit Economic LTV Delta   : +€${(optLtv - baseLtv).toFixed(2)} revenue increase per customer\n\n`;
+
+      text += `2. PROJECTED ENTERPRISE ARR LIFT\n`;
+      text += `-------------------------------------------------------------------------\n`;
+      text += `By increasing onboarding/activation success by +${model.liftM1}% in Month 1 and preserving ${model.carryOver}% of that benefit across the 12-month user lifecycle, we project a cumulative bottom-line revenue lift of:\n\n`;
+      text += `>> Net Annual Recurring Revenue Delta (ARR) : +€${Math.round(annualRev).toLocaleString()} / Year\n\n`;
+
+      text += `3. GROWTH RECOMMENDATION\n`;
+      text += `-------------------------------------------------------------------------\n`;
+      if (optRatio >= 3.0) {
+        text += `- **Roll out Onboarding Redesign:** The optimized LTV:CAC score of **${optRatio.toFixed(1)}x** exceeds the key SaaS health index of 3.0x. This demonstrates that investing resources into early-stage activation flows has a massive ROI.\n`;
+        text += `- **Scale User Acquisition:** With LTV significantly higher than CAC, the unit economics are highly profitable. We recommend increasing our performance marketing spend to capture more top-of-funnel traffic.\n`;
+      } else {
+        text += `- **Optimize Unit Cost Structure:** While the simulated onboarding changes improve our economics, the LTV:CAC score of **${optRatio.toFixed(1)}x** remains below the healthy 3.0x index. We should focus on lowering CAC or adjusting our subscription pricing structures to reach profitability.\n`;
+      }
+
+      memoContent.textContent = text;
+    }
+
+    // Setup state updating links
+    function updateState() {
+      model.cohortSize = parseInt(inputCohortSize.value) || 10;
+      model.arpu = parseInt(inputArpu.value);
+      valArpu.textContent = `€${model.arpu.toFixed(2)}`;
+      model.cac = parseInt(inputCac.value);
+      valCac.textContent = `€${model.cac.toFixed(2)}`;
+
+      model.baseM1 = parseInt(inputBaseM1.value) || 0;
+      model.baseM3 = parseInt(inputBaseM3.value) || 0;
+      model.baseM6 = parseInt(inputBaseM6.value) || 0;
+      model.baseM12 = parseInt(inputBaseM12.value) || 0;
+
+      model.liftM1 = parseInt(inputLiftM1.value) || 0;
+      valLiftM1.textContent = `+${model.liftM1}%`;
+      model.carryOver = parseInt(inputCarryOver.value) || 0;
+      valCarryOver.textContent = `${model.carryOver}%`;
+
+      calculate();
+    }
+
+    // Connect input elements to recalculation triggers
+    [inputCohortSize, inputArpu, inputCac, inputBaseM1, inputBaseM3, inputBaseM6, inputBaseM12, inputLiftM1, inputCarryOver].forEach(input => {
+      input.addEventListener('input', updateState);
+    });
+
+    // Apply model values back to fields on presets load
+    function applyModelToInputs() {
+      inputCohortSize.value = model.cohortSize;
+      inputArpu.value = model.arpu;
+      valArpu.textContent = `€${model.arpu.toFixed(2)}`;
+      inputCac.value = model.cac;
+      valCac.textContent = `€${model.cac.toFixed(2)}`;
+
+      inputBaseM1.value = model.baseM1;
+      inputBaseM3.value = model.baseM3;
+      inputBaseM6.value = model.baseM6;
+      inputBaseM12.value = model.baseM12;
+
+      inputLiftM1.value = model.liftM1;
+      valLiftM1.textContent = `+${model.liftM1}%`;
+      inputCarryOver.value = model.carryOver;
+      valCarryOver.textContent = `${model.carryOver}%`;
+    }
+
+    // Clipboard copy action
+    document.getElementById('btnCopyMemo').addEventListener('click', () => {
+      const textToCopy = memoContent.textContent;
+      const tempArea = document.createElement("textarea");
+      tempArea.value = textToCopy;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempArea);
+
+      const btn = document.getElementById('btnCopyMemo');
+      const oldLabel = btn.innerHTML;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        Brief Copied!
+      `;
+      setTimeout(() => { btn.innerHTML = oldLabel; }, 2000);
+    });
+
+    // Initialize application layout
+    window.onload = function() {
+      applyModelToInputs();
+      calculate();
+    };
+  </script>
+
+</body>
+</html>
