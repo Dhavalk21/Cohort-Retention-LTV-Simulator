@@ -19,8 +19,8 @@ This simulator computes user lifecycle value and growth using industry-standard 
    $$\text{Retention Rate } (R_t) \in [0, 100\%]$$
 
 2. **Customer Lifetime Value (LTV):** Sum of the expected revenue contribution of a user over their first year:
-   $$\text{LTV} = \sum_{t=0}^{12} (R_t \times \text{ARPU})$$
-   *Where $\text{ARPU}$ is the Average Revenue Per User per month.*
+   $$\mathrm{LTV} = \sum_{t=0}^{12} (R_t \times \mathrm{ARPU})$$
+   *Where **ARPU** is the Average Revenue Per User per month.*
 
 3. **LTV to CAC Ratio:** Evaluates business sustainability:
    $$\text{Ratio} = \frac{\text{LTV}}{\text{CAC}}$$
