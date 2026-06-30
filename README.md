@@ -32,5 +32,5 @@ This simulator computes user lifecycle value and growth using industry-standard 
 
 * **Responsive SVG Graphs:** Features an interactive vector line chart mapping baseline vs. optimized retention curves using smooth cubic Bezier paths.
 * **Client-Side Calculations:** Run completely on highly responsive, vanilla JavaScript with zero tracking cookies or database dependencies.
-* **Tailwind CSS Styling:** Crafted using a clean, accessible layout designed for high-resolution widescreen monitors and mobile screens alike.
+* **Tailwind CSS Styling:** Crafted using a clean, accessible layout designed for a high-resolution widescreen monitors and mobile screens alike.
 * **Interactive Tooltips:** Friendly, built-in documentation overlays next to every metric, helping stakeholders understand complex product operations terms on hover.
