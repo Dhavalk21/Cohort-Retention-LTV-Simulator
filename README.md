@@ -11,7 +11,7 @@ An interactive analytics dashboard built to model user retention curves, simulat
 * **LTV:CAC Health Analysis:** Evaluates the vital relationship between customer acquisition costs and lifetime value, signaling whether product economics are healthy (target index $\geq 3.0x$) or need adjustments.
 * **Executive Communication:** Features a built-in automated strategy brief generator that summarizes complex cohort models into plain-English executive memos ready for leadership review.
 
-## ⚙️ How the Economics are Calculated
+## ⚙️ How the Economics are Calculated 
 
 This simulator computes user lifecycle value and growth using industry-standard SaaS formulas:
 
